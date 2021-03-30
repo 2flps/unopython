@@ -8,6 +8,376 @@ cores = {'limpa': '\033[m',
 
 import random
 
+class Mesa:
+    def __init__(self, listaJogadores):
+        self.listaJogadores = listaJogadores
+
+
+    def cartainicial(self):
+        '''
+        -> Irá gerar a carta inicial
+        :return: retornará uma carta normal
+        '''
+        return cartanormal()
+
+
+    def sequencias(self, jogadoresHumanos = 1):
+        '''
+        -> Irá gerar uma lista contendo dicionários com as informações de sequencia (quem é o player 0, 1, 2, etc...)
+        :param jogadoresHumanos: int -> quantos jogadores humanos, ou seja, que não são IA estão jogando
+        :return: retornará uma lista contendo dicionários com as informações de sequencia
+        '''
+        if jogadoresHumanos > len(self.listaJogadores):
+            jogadoresHumanos = len(self.listaJogadores)
+        lista = list()
+        dictSequencias = dict()
+        for nJogadorReal in range(0, jogadoresHumanos):
+            dictSequencias = {f'{nJogadorReal}': True}
+            lista.append(dictSequencias.copy())
+        for nJogador in range(jogadoresHumanos, len(self.listaJogadores)):
+            dictSequencias = {f'{nJogador}': False}
+            lista.append(dictSequencias.copy())
+        return lista
+
+
+    def invertersequencias(self, sequenciaDaMesa):
+        '''
+        -> Irá inverter a sequência de jogadores
+        :param sequencias: Uma variavél contendo a sequência do jogo. A variavél pode ser declarada dentro da classe
+        :return: no return
+        '''
+        return sequenciaDaMesa[::-1]
+
+
+    def quantidadedeplayers(self):
+        '''
+        -> Irá retornar o valor com a quantidade de jogadores que estão jogando
+        :return: int -> retornará o valor com a quantidade de players que estão jogando
+        '''
+        return len(self.listaJogadores)
+
+
+    def playerinicial(self, quantidadedeplayers):
+        '''
+        -> Irá sortear o jogador inicial
+        :return: int -> retornará o número do player inicial
+        '''
+        return random.randint(0, quantidadedeplayers - 1)
+
+
+    def inverter(self):
+        '''
+        -> Irá gerar um valor booleano dizendo que o baralho está invertido
+        :return: bool -> True
+        '''
+        return True
+
+
+    def desinverter(self):
+        '''
+        -> Irá gerar um valor booleano dizendo que o baralho está desinvertido
+        :return: bool -> False
+        '''
+        return False
+
+
+    def proximoplayer(self, invertido, playerdavez, quantidadedeplayers, pularplayer):
+        '''
+        -> Irá definir qual será o próximo jogador á jogar
+        :param invertido: váriavel booleana dizendo se o jogo está invertido ou não
+        :param playerdavez: jogador que está jogando
+        :param quantidadedeplayers: quantidade de players que estão jogando
+        :param pularplayer: quantidade de jogadores que serão pulados (1, 2, 3, etc.)
+        :return: irá retornar qual um integer dizendo qual será o próximo jogador
+        '''
+        quantidade_de_pulos = pularplayer
+        proximojogador = 0
+        if invertido == False:
+            if playerdavez + pularplayer >= quantidadedeplayers:
+                return (playerdavez + pularplayer) - quantidadedeplayers
+            else:
+                return playerdavez + pularplayer
+        else:
+            if playerdavez - pularplayer < 0:
+                while True:
+                    if playerdavez - 1 < 0:
+                        proximojogador = quantidadedeplayers - 1
+                        quantidade_de_pulos -= 1
+                    else:
+                        proximojogador = playerdavez - 1
+                        quantidade_de_pulos -= 1
+                    if quantidade_de_pulos <= 0:
+                        break
+                    else:
+                        pass
+                return proximojogador
+            else:
+                return playerdavez - pularplayer
+
+
+    def acao(self, cores):
+        '''
+        -> Irá printar um menu de jogar
+        :param cores: dicionário contendo as cores
+        :return: irá retornar um int na qual condiz com a escolhda do jogador
+        '''
+        pergunta = str(input("""Escolha uma ação:
+{}1.{} Jogar uma carta
+{}2.{} Comprar carta(s)
+{}3.{} Ver o seu baralho e a quantidade de cartas de outros jogadores
+{}4.{} Encerrar o jogo
+
+Escolha sua opção: """.format(cores['amarelo'], cores['limpa'], cores['amarelo'], cores['limpa'], cores['amarelo'], cores['limpa'], cores['vermelho'], cores['limpa']))).strip()
+        while pergunta not in '1234':
+            pergunta = str(input('Valor inválido. Por favor, digite novamente: ')).strip()
+        perguntaint = int(pergunta)
+        return perguntaint
+    
+    
+    def printarcartamesa(self, cartamesa):
+        '''
+        Irá printar a carta na mesa de forma formatada
+        :param cartamesa: váriavel contendo a carta na mesa
+        :return: irá retornar uma string dizendo formatada
+        '''
+        if cartamesa['cor'] == 'vermelho':
+            return '{}{} | Vermelho{}'.format(cores['vermelho'], cartamesa['numero'], cores['limpa'])
+        elif cartamesa['cor'] == 'amarelo':
+            return '{}{} | Amarelo{}'.format(cores['amarelo'], cartamesa['numero'], cores['limpa'])
+        elif cartamesa['cor'] == 'verde':
+            return '{}{} | Verde{}'.format(cores['verde'], cartamesa['numero'], cores['limpa'])
+        elif cartamesa['cor'] == 'azul':
+            return '{}{} | Azul{}'.format(cores['azul'], cartamesa['numero'], cores['limpa'])
+        else:
+            return '{} | Especial'.format(cartamesa['numero'])
+
+
+    def cartasjogavel(self, cartamesa, jogadorDaVez, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
+        '''
+        -> Irá gerar um valor booleano dizendo se há ou não cartas jogáveis no baralho do player
+        :param cartamesa: váriavel contendo a carta na mesa
+        :param jogadorDaVez: váriavel integer dizendo o jogador da vez
+        :param somatoriadecompra: somatória de compras de cartas
+        :param somatoriacarta: váriavel contendo o tipo de carta que está fazendo a somatória
+        :param corescolhida: váriavel booleana na qual diz se há uma cor escolhida para ser jogada
+        :param corescolhidaCor: váriavel dizendo a cor específicada
+        :return: irá retornar um valor booleano dizendo se há ou não cartas jogáveis
+        '''
+        if corescolhida == True:
+            cartasjogaveis = False
+            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
+                if self.listaJogadores[jogadorDaVez][c]['cor'] == corescolhidaCor or self.listaJogadores[jogadorDaVez][c]['numero'] == 'Mudar Cor' or self.listaJogadores[jogadorDaVez][c]['numero'] == '+4':
+                    cartasjogaveis = True
+                else:
+                    pass
+            return cartasjogaveis
+        else:
+            cartasjogaveis2 = False
+            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
+                if self.listaJogadores[jogadorDaVez][c]['cor'] == cartamesa['cor'] or self.listaJogadores[jogadorDaVez][c]['numero'] == cartamesa['numero'] or self.listaJogadores[jogadorDaVez][c]['cor'] == 'preto':
+                    cartasjogaveis2 = True
+                else:
+                    pass
+            return cartasjogaveis2
+        if somatoriadecompra > 0:
+            cartasjogaveis3 = False
+            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
+                if self.listaJogadores[jogadorDaVez][c]['numero'] == somatoriacarta:
+                    cartasjogaveis3 = True
+                else:
+                    pass
+            return cartasjogaveis3
+
+
+    def cartajogavel(self, cartamesa, cartajogada, somatoriadecompra, somatoriacarta, jogadordavez, corescolhida, corescolhidaCor):
+        '''
+        -> Irá retornar um valor booleano dizendo se a carta escolhida pelo player é jogável
+        :param cartamesa: váriavel contendo a carta na mesa
+        :param cartajogada: carta jogável pelo player
+        :param somatoriadecompra: váriavel integer contendo a quantidade de somatórias de cartas para comprar
+        :param somatoriacarta: váriavel dizendo o tipo da carta para somatória de compra
+        :param jogadordavez: váriavel integer dizendo o jogador da vez
+        :param corescolhida: váriavel booleana dizendo se há cor escolhida para ser jogada
+        :param corescolhidaCor: váriavel dizendo a cor escolhida para ser jogada
+        :return: irá retornar um valor booleano
+        '''
+        if self.listaJogadores[jogadordavez][cartajogada]['numero'] == '+4':
+            if somatoriadecompra > 0 and somatoriacarta != '+4':
+                return False
+            else:
+                return True
+        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == 'Mudar Cor' and somatoriadecompra == 0:
+            return True
+        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == 'Mudar Cor' and somatoriadecompra > 0:
+            return False
+        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == cartamesa['numero'] or self.listaJogadores[jogadordavez][cartajogada]['cor'] == cartamesa['cor']:
+            if somatoriadecompra > 0:
+                if self.listaJogadores[jogadordavez][cartajogada]['numero'] == cartamesa['numero']:
+                    return True
+                else:
+                    return False
+            else:
+                if corescolhida == True:
+                    if self.listaJogadores[jogadordavez][cartajogada]['cor'] == corescolhidaCor:
+                        return True
+                    else:
+                        return False
+                else:
+                    return True
+        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] != cartamesa['numero'] or self.listaJogadores[jogadordavez][cartajogada]['cor'] != cartamesa['cor']:
+            return False
+        else:
+            return 'ERRO: Condição não presente no código.'
+
+
+    def jogarcartamenu(self, jogadordavez, cores):
+        '''
+        -> Irá fazer um input na qual o jogador irá ter que digitar a carta que deseja jogar
+        :param jogadordavez: váriavel integer dizendo o jogador da vez
+        :param cores: dicionário com cores
+        :return: irá retornar o integer do índice da carta
+        '''
+        while True:
+            try:
+                carta = int(input('Por favor, digite a carta que deseja jogar: '.format(cores['vermelho'], cores['limpa'])))
+                if carta > -1 and carta < len(self.listaJogadores[jogadordavez]):
+                    break
+            except:
+                pass
+        return carta
+
+
+    def cartasinvalidas_loop(self, invertido, jogadordavez, quantidadejogadores, somatoriadecompra, cartanamesa, mesa_printarcartamesa):
+        '''
+        -> Caso ocorra um erro de cartas iválidas, este loop será acionado
+        :param invertido: váriavel booleana dizendo se o jogo está invertido
+        :param jogadordavez: váriavel integer dizendo o jogador da vez
+        :param quantidadejogadores: váriavel contendo o número de jogadores
+        :param somatoriadecompra: váriavel dizendo a somatória de cartas para serem compradas
+        :param cartanamesa: váriavel contendo o dicionário com a carta na mesa
+        :param mesa_printarcartamesa: função dizendo para printar a carta na mesa
+        :return: retornará um integer dando uma opção válida para ser jogada
+        '''
+        print()
+        print('Você não possui nenhuma carta jogável. Escolha outra opção:')
+        print('''1. Jogar uma carta
+2. Comprar carta(s)
+3. Ver o seu baralho e a quantidade de cartas de outros jogadores
+4. Encerrar o jogo''')
+        escolhaloop = str(input('Digite sua opção: '))[0]
+        while escolhaloop.isnumeric() == False:
+            escolhaloop = str(input('Digite uma opção válida: '))[0]
+        escolhaloopint = int(escolhaloop)
+        while escolhaloopint < 1 and escolhaloopint > 4:
+            escolhaloop = str(input('Digite uma opção válida: '))
+            while escolhaloop.isnumeric() == False:
+                escolhaloop = str(input('Digite uma opção válida: '))
+            escolhaloopint = int(escolhaloop)
+        if escolhaloopint == 1:
+            print('Você não possui cartas válidas.')
+        elif escolhaloopint == 2:
+            if somatoriadecompra == 0:
+                comprarcarta(self.listaJogadores, jogadordavez, 1)
+                print('Você comprou 1 carta.')
+            if somatoriadecompra > 0:
+                comprarcarta(self.listaJogadores, jogadordavez, somatoriadecompra)
+                print(f'Você comprou {somatoriadecompra} cartas.')
+                somatoriadecompra = 0
+            jogadordavez = self.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
+            return 2
+        elif escolhaloopint == 3:
+            vercartas(self.listaJogadores)
+            qntcartasjogadores(self.listaJogadores, jogadordavez)
+            print()
+            print('A carta na mesa é: {}'.format(mesa_printarcartamesa), end = ' | ')
+            return 3
+        elif escolhaloopint == 4:
+            return 4
+
+
+    def printarnomedacor(self, corescolhidaCor, cores):
+        '''
+        -> Irá printar o nome da cor escolhida de forma formatada
+        :param corescolhidaCor: váriavel contendo a cor escolhida
+        :param cores: dicionário de cores
+        :return: irá retornar uma string formatada com o nome da cor
+        '''
+        if corescolhidaCor == 'azul':
+            return '{}Azul{}'.format(cores['azul'], cores['limpa'])
+        elif corescolhidaCor == 'verde':
+            return '{}Verde{}'.format(cores['verde'], cores['limpa'])
+        elif corescolhidaCor == 'amarelo':
+            return '{}Amarelo{}'.format(cores['amarelo'], cores['limpa'])
+        elif corescolhidaCor == 'vermelho':
+            return '{}Vermelho{}'.format(cores['vermelho'], cores['limpa'])
+        else:
+            return corescolhidaCor
+
+
+class Cartas:
+    def __init__(self, listaJogadores):
+        self.listaJogadores = listaJogadores
+
+
+    def possuicartanumero(self, requestPlayer, cartanumero):
+        '''
+        -> Irá gerar um valor booleano dizendo se o jogador possuí uma carta de 'x' número
+        :param requestPlayer: baralho que será analisado
+        :param cartanumero: número da carta que se deseja encontrar
+        :return: True/False
+        '''
+        possuicarta = False
+        for c in range(0, len(self.listaJogadores[requestPlayer])):
+            if self.listaJogadores[requestPlayer][c]['numero'] == cartanumero:
+                possuicarta = True
+            else:
+                pass
+        return possuicarta
+
+
+    def menu_cores(self, cores):
+        '''
+        -> Irá criar um input na qual o usuário terá que escolher a cor que desejá jogar
+        :param cores: dicionário contendo as cores
+        :return: irá retornar um integer na qual condiz com a cor escolhida
+        '''
+        print('Escolha uma cor: \n{}1. Vermelho{}\n{}2. Amarelo{}\n{}3. Azul{}\n{}4. Verde{}'.format(cores['vermelho'], cores['limpa'], cores['amarelo'], cores['limpa'], cores['azul'], cores['limpa'], cores['verde'], cores['limpa']))
+        cor = str(input('Digite o número da cor: '))
+        while cor not in '1234':
+            cor = str(input('Valor inválido. Por favor, digite o número da cor: '))
+        corint = int(cor)
+        return corint
+
+
+    def efeito_mudarcor(self, cores):
+        '''
+        -> Irá associar as cores em integer com as cores em string
+        :param cores: dicionário de cores
+        :return: irá retornar uma string dizendo a cor escolhida no menu_cores
+        '''
+        cornum = self.menu_cores(cores)
+        if cornum == 1:
+            return 'vermelho'
+        elif cornum == 2:
+            return 'amarelo'
+        elif cornum == 3:
+            return 'azul'
+        else:
+            return 'verde'
+
+
+class Debug:
+    def __init__(self, debug_mode):
+        self.debug_mode = debug_mode
+
+
+    def printar(msg):
+        if self.debug_mode == True:
+            print(msg)
+        else:
+            pass
+
+
 def maisquatro():
     '''
     -> irá gerar uma carta "+4"
@@ -221,373 +591,3 @@ def pegarcartaindex(listJogadores, jogadorDaVez, indexCarta):
     :return: irá retornar o dicionário da carta
     '''
     return listJogadores[jogadorDaVez][indexCarta]
-
-
-class Mesa:
-    def __init__(self, listaJogadores):
-        self.listaJogadores = listaJogadores
-       
-
-    def cartainicial(self):
-        '''
-        -> Irá gerar a carta inicial
-        :return: retornará uma carta normal
-        '''
-        return cartanormal()
-    
-
-    def sequencias(self, jogadoresHumanos = 1):
-        '''
-        -> Irá gerar uma lista contendo dicionários com as informações de sequencia (quem é o player 0, 1, 2, etc...)
-        :param jogadoresHumanos: int -> quantos jogadores humanos, ou seja, que não são IA estão jogando
-        :return: retornará uma lista contendo dicionários com as informações de sequencia
-        '''
-        if jogadoresHumanos > len(self.listaJogadores):
-            jogadoresHumanos = len(self.listaJogadores)
-        lista = list()
-        dictSequencias = dict()
-        for nJogadorReal in range(0, jogadoresHumanos):
-            dictSequencias = {f'{nJogadorReal}': True}
-            lista.append(dictSequencias.copy())
-        for nJogador in range(jogadoresHumanos, len(self.listaJogadores)):
-            dictSequencias = {f'{nJogador}': False}
-            lista.append(dictSequencias.copy())
-        return lista
-    
-
-    def invertersequencias(self, sequenciaDaMesa):
-        '''
-        -> Irá inverter a sequência de jogadores
-        :param sequencias: Uma variavél contendo a sequência do jogo. A variavél pode ser declarada dentro da classe
-        :return: no return
-        '''
-        return sequenciaDaMesa[::-1]
-    
-
-    def quantidadedeplayers(self):
-        '''
-        -> Irá retornar o valor com a quantidade de jogadores que estão jogando
-        :return: int -> retornará o valor com a quantidade de players que estão jogando
-        '''
-        return len(self.listaJogadores)
-    
-
-    def playerinicial(self, quantidadedeplayers):
-        '''
-        -> Irá sortear o jogador inicial
-        :return: int -> retornará o número do player inicial
-        '''
-        return random.randint(0, quantidadedeplayers - 1)
-    
-
-    def inverter(self):
-        '''
-        -> Irá gerar um valor booleano dizendo que o baralho está invertido
-        :return: bool -> True
-        '''
-        return True
-    
-
-    def desinverter(self):
-        '''
-        -> Irá gerar um valor booleano dizendo que o baralho está desinvertido
-        :return: bool -> False
-        '''
-        return False
-
-
-    def proximoplayer(self, invertido, playerdavez, quantidadedeplayers, pularplayer):
-        '''
-        -> Irá definir qual será o próximo jogador á jogar
-        :param invertido: váriavel booleana dizendo se o jogo está invertido ou não
-        :param playerdavez: jogador que está jogando
-        :param quantidadedeplayers: quantidade de players que estão jogando
-        :param pularplayer: quantidade de jogadores que serão pulados (1, 2, 3, etc.)
-        :return: irá retornar qual um integer dizendo qual será o próximo jogador
-        '''
-        quantidade_de_pulos = pularplayer
-        proximojogador = 0
-        if invertido == False:
-            if playerdavez + pularplayer >= quantidadedeplayers:
-                return (playerdavez + pularplayer) - quantidadedeplayers
-            else:
-                return playerdavez + pularplayer
-        else:
-            if playerdavez - pularplayer < 0:
-                while True:
-                    if playerdavez - 1 < 0:
-                        proximojogador = quantidadedeplayers - 1
-                        quantidade_de_pulos -= 1
-                    else:
-                        proximojogador = playerdavez - 1
-                        quantidade_de_pulos -= 1
-                    if quantidade_de_pulos <= 0:
-                        break
-                    else:
-                        pass
-                return proximojogador
-            else:
-                return playerdavez - pularplayer
-
-
-    def acao(self, cores):
-        '''
-        -> Irá printar um menu de jogar
-        :param cores: dicionário contendo as cores
-        :return: irá retornar um int na qual condiz com a escolhda do jogador
-        '''
-        pergunta = str(input("""Escolha uma ação:
-{}1.{} Jogar uma carta
-{}2.{} Comprar carta(s)
-{}3.{} Ver o seu baralho e a quantidade de cartas de outros jogadores
-{}4.{} Encerrar o jogo
-
-Escolha sua opção: """.format(cores['amarelo'], cores['limpa'], cores['amarelo'], cores['limpa'], cores['amarelo'], cores['limpa'], cores['vermelho'], cores['limpa']))).strip()
-        while pergunta not in '1234':
-            pergunta = str(input('Valor inválido. Por favor, digite novamente: ')).strip()
-        perguntaint = int(pergunta)
-        return perguntaint
-    
-    
-    def printarcartamesa(self, cartamesa):
-        '''
-        Irá printar a carta na mesa de forma formatada
-        :param cartamesa: váriavel contendo a carta na mesa
-        :return: irá retornar uma string dizendo formatada
-        '''
-        if cartamesa['cor'] == 'vermelho':
-            return '{}{} | Vermelho{}'.format(cores['vermelho'], cartamesa['numero'], cores['limpa'])
-        elif cartamesa['cor'] == 'amarelo':
-            return '{}{} | Amarelo{}'.format(cores['amarelo'], cartamesa['numero'], cores['limpa'])
-        elif cartamesa['cor'] == 'verde':
-            return '{}{} | Verde{}'.format(cores['verde'], cartamesa['numero'], cores['limpa'])
-        elif cartamesa['cor'] == 'azul':
-            return '{}{} | Azul{}'.format(cores['azul'], cartamesa['numero'], cores['limpa'])
-        else:
-            return '{} | Especial'.format(cartamesa['numero'])
-    
-
-    def cartasjogavel(self, cartamesa, jogadorDaVez, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
-        '''
-        -> Irá gerar um valor booleano dizendo se há ou não cartas jogáveis no baralho do player
-        :param cartamesa: váriavel contendo a carta na mesa
-        :param jogadorDaVez: váriavel integer dizendo o jogador da vez
-        :param somatoriadecompra: somatória de compras de cartas
-        :param somatoriacarta: váriavel contendo o tipo de carta que está fazendo a somatória
-        :param corescolhida: váriavel booleana na qual diz se há uma cor escolhida para ser jogada
-        :param corescolhidaCor: váriavel dizendo a cor específicada
-        :return: irá retornar um valor booleano dizendo se há ou não cartas jogáveis
-        '''
-        if corescolhida == True:
-            cartasjogaveis = False
-            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
-                if self.listaJogadores[jogadorDaVez][c]['cor'] == corescolhidaCor or self.listaJogadores[jogadorDaVez][c]['numero'] == 'Mudar Cor' or self.listaJogadores[jogadorDaVez][c]['numero'] == '+4':
-                    cartasjogaveis = True
-                else:
-                    pass
-            return cartasjogaveis
-        else:
-            cartasjogaveis2 = False
-            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
-                if self.listaJogadores[jogadorDaVez][c]['cor'] == cartamesa['cor'] or self.listaJogadores[jogadorDaVez][c]['numero'] == cartamesa['numero'] or self.listaJogadores[jogadorDaVez][c]['cor'] == 'preto':
-                    cartasjogaveis2 = True
-                else:
-                    pass
-            return cartasjogaveis2
-        if somatoriadecompra > 0:
-            cartasjogaveis3 = False
-            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
-                if self.listaJogadores[jogadorDaVez][c]['numero'] == somatoriacarta:
-                    cartasjogaveis3 = True
-                else:
-                    pass
-            return cartasjogaveis3
-
-
-    def cartajogavel(self, cartamesa, cartajogada, somatoriadecompra, somatoriacarta, jogadordavez, corescolhida, corescolhidaCor):
-        '''
-        -> Irá retornar um valor booleano dizendo se a carta escolhida pelo player é jogável
-        :param cartamesa: váriavel contendo a carta na mesa
-        :param cartajogada: carta jogável pelo player
-        :param somatoriadecompra: váriavel integer contendo a quantidade de somatórias de cartas para comprar
-        :param somatoriacarta: váriavel dizendo o tipo da carta para somatória de compra
-        :param jogadordavez: váriavel integer dizendo o jogador da vez
-        :param corescolhida: váriavel booleana dizendo se há cor escolhida para ser jogada
-        :param corescolhidaCor: váriavel dizendo a cor escolhida para ser jogada
-        :return: irá retornar um valor booleano
-        '''
-        if self.listaJogadores[jogadordavez][cartajogada]['numero'] == '+4':
-            if somatoriadecompra > 0 and somatoriacarta != '+4':
-                return False
-            else:
-                return True
-        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == 'Mudar Cor' and somatoriadecompra == 0:
-            return True
-        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == 'Mudar Cor' and somatoriadecompra > 0:
-            return False
-        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == cartamesa['numero'] or self.listaJogadores[jogadordavez][cartajogada]['cor'] == cartamesa['cor']:
-            if somatoriadecompra > 0:
-                if self.listaJogadores[jogadordavez][cartajogada]['numero'] == cartamesa['numero']:
-                    return True
-                else:
-                    return False
-            else:
-                if corescolhida == True:
-                    if self.listaJogadores[jogadordavez][cartajogada]['cor'] == corescolhidaCor:
-                        return True
-                    else:
-                        return False
-                else:
-                    return True
-        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] != cartamesa['numero'] or self.listaJogadores[jogadordavez][cartajogada]['cor'] != cartamesa['cor']:
-            return False
-        else:
-            return 'ERRO: Condição não presente no código.'
-
-
-    def jogarcartamenu(self, jogadordavez, cores):
-        '''
-        -> Irá fazer um input na qual o jogador irá ter que digitar a carta que deseja jogar
-        :param jogadordavez: váriavel integer dizendo o jogador da vez
-        :param cores: dicionário com cores
-        :return: irá retornar o integer do índice da carta
-        '''
-        while True:
-            try:
-                carta = int(input('Por favor, digite a carta que deseja jogar: '.format(cores['vermelho'], cores['limpa'])))
-                if carta > -1 and carta < len(self.listaJogadores[jogadordavez]):
-                    break
-            except:
-                pass
-        return carta
-
-
-    def cartasinvalidas_loop(self, invertido, jogadordavez, quantidadejogadores, somatoriadecompra, cartanamesa, mesa_printarcartamesa):
-        '''
-        -> Caso ocorra um erro de cartas iválidas, este loop será acionado
-        :param invertido: váriavel booleana dizendo se o jogo está invertido
-        :param jogadordavez: váriavel integer dizendo o jogador da vez
-        :param quantidadejogadores: váriavel contendo o número de jogadores
-        :param somatoriadecompra: váriavel dizendo a somatória de cartas para serem compradas
-        :param cartanamesa: váriavel contendo o dicionário com a carta na mesa
-        :param mesa_printarcartamesa: função dizendo para printar a carta na mesa
-        :return: retornará um integer dando uma opção válida para ser jogada
-        '''
-        print()
-        print('Você não possui nenhuma carta jogável. Escolha outra opção:')
-        print('''1. Jogar uma carta
-2. Comprar carta(s)
-3. Ver o seu baralho e a quantidade de cartas de outros jogadores
-4. Encerrar o jogo''')
-        escolhaloop = str(input('Digite sua opção: '))[0]
-        while escolhaloop.isnumeric() == False:
-            escolhaloop = str(input('Digite uma opção válida: '))[0]
-        escolhaloopint = int(escolhaloop)
-        while escolhaloopint < 1 and escolhaloopint > 4:
-            escolhaloop = str(input('Digite uma opção válida: '))
-            while escolhaloop.isnumeric() == False:
-                escolhaloop = str(input('Digite uma opção válida: '))
-            escolhaloopint = int(escolhaloop)
-        if escolhaloopint == 1:
-            print('Você não possui cartas válidas.')
-        elif escolhaloopint == 2:
-            if somatoriadecompra == 0:
-                comprarcarta(self.listaJogadores, jogadordavez, 1)
-                print('Você comprou 1 carta.')
-            if somatoriadecompra > 0:
-                comprarcarta(self.listaJogadores, jogadordavez, somatoriadecompra)
-                print(f'Você comprou {somatoriadecompra} cartas.')
-                somatoriadecompra = 0
-            jogadordavez = self.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
-            return 2
-        elif escolhaloopint == 3:
-            vercartas(self.listaJogadores)
-            qntcartasjogadores(self.listaJogadores, jogadordavez)
-            print()
-            print('A carta na mesa é: {}'.format(mesa_printarcartamesa), end = ' | ')
-            return 3
-        elif escolhaloopint == 4:
-            return 4
-    
-
-    def printarnomedacor(self, corescolhidaCor, cores):
-        '''
-        -> Irá printar o nome da cor escolhida de forma formatada
-        :param corescolhidaCor: váriavel contendo a cor escolhida
-        :param cores: dicionário de cores
-        :return: irá retornar uma string formatada com o nome da cor
-        '''
-        if corescolhidaCor == 'azul':
-            return '{}Azul{}'.format(cores['azul'], cores['limpa'])
-        elif corescolhidaCor == 'verde':
-            return '{}Verde{}'.format(cores['verde'], cores['limpa'])
-        elif corescolhidaCor == 'amarelo':
-            return '{}Amarelo{}'.format(cores['amarelo'], cores['limpa'])
-        elif corescolhidaCor == 'vermelho':
-            return '{}Vermelho{}'.format(cores['vermelho'], cores['limpa'])
-        else:
-            return corescolhidaCor
-
-
-class Cartas:
-    def __init__(self, listaJogadores):
-        self.listaJogadores = listaJogadores
-
-
-    def possuicartanumero(self, requestPlayer, cartanumero):
-        '''
-        -> Irá gerar um valor booleano dizendo se o jogador possuí uma carta de 'x' número
-        :param requestPlayer: baralho que será analisado
-        :param cartanumero: número da carta que se deseja encontrar
-        :return: True/False
-        '''
-        possuicarta = False
-        for c in range(0, len(self.listaJogadores[requestPlayer])):
-            if self.listaJogadores[requestPlayer][c]['numero'] == cartanumero:
-                possuicarta = True
-            else:
-                pass
-        return possuicarta
-    
-
-    def menu_cores(self, cores):
-        '''
-        -> Irá criar um input na qual o usuário terá que escolher a cor que desejá jogar
-        :param cores: dicionário contendo as cores
-        :return: irá retornar um integer na qual condiz com a cor escolhida
-        '''
-        print('Escolha uma cor: \n{}1. Vermelho{}\n{}2. Amarelo{}\n{}3. Azul{}\n{}4. Verde{}'.format(cores['vermelho'], cores['limpa'], cores['amarelo'], cores['limpa'], cores['azul'], cores['limpa'], cores['verde'], cores['limpa']))
-        cor = str(input('Digite o número da cor: '))
-        while cor not in '1234':
-            cor = str(input('Valor inválido. Por favor, digite o número da cor: '))
-        corint = int(cor)
-        return corint
-    
-
-    def efeito_mudarcor(self, cores):
-        '''
-        -> Irá associar as cores em integer com as cores em string
-        :param cores: dicionário de cores
-        :return: irá retornar uma string dizendo a cor escolhida no menu_cores
-        '''
-        cornum = self.menu_cores(cores)
-        if cornum == 1:
-            return 'vermelho'
-        elif cornum == 2:
-            return 'amarelo'
-        elif cornum == 3:
-            return 'azul'
-        else:
-            return 'verde'
-
-
-class Debug:
-    def __init__(self, debug_mode):
-        self.debug_mode = debug_mode
-
-
-    def printar(msg):
-        if self.debug_mode == True:
-            print(msg)
-        else:
-            pass
