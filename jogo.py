@@ -24,7 +24,6 @@ somatoriadecompra = 0
 somatoriacarta = '0'
 corescolhida = False
 corescolhida_cor = ''
-pene = ''
 
 # Intro
 print('---UNO---')
