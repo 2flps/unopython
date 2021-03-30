@@ -3,7 +3,6 @@
 from uno import *
 from time import sleep
 import file_configs
-#teste
 
 # Configs from 'file_configs.py'
 file_configs.escrever() # If the file does not exist, it will generate one
