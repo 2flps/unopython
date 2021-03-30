@@ -579,3 +579,15 @@ class Cartas:
             return 'azul'
         else:
             return 'verde'
+
+
+class Debug:
+    def __init__(self, debug_mode):
+        self.debug_mode = debug_mode
+
+
+    def printar(msg):
+        if self.debug_mode == True:
+            print(msg)
+        else:
+            pass
