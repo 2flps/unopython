@@ -19,11 +19,11 @@ jogadores = mesa.sequencias(1) # This will set the order of playing
 primeirojogador = mesa.playerinicial(quantidadejogadores) # Calls the function 'playerinicial' to generate the first player for the first turn
 jogadordavez = primeirojogador # This variable stores the number (integer) of the current turn player. When the game starts, the current player will always be the result of 'playerinicial' function
 invertido = False # This variable stores a boolean which will tell if the game is clockwise or anticlockwise
-cartanamesa = {'cor': 'especial', 'numero': '+4'} #mesa.cartainicial() # This variable stores a dictionare containing the current turn card. This is an example of a card -> {'cor': 'especial', 'numero': '+4'} 
-somatoriadecompra = 4 #0 # If there is an ongoing "buy-type" card (+4 or +2), then this variable will store the purchase sum that the unlucky one will have to buy
-somatoriacarta = '+4' #'0' # This variable will store the "buy-type" card (+4 or +2). This '0' data is just a placeholder :)
-corescolhida = True #False # If some player choosed a color with a "change-color-type" card ('Change color' or +4) then the variable will set "True" until someone buy a card
-corescolhida_cor = 'amarelo' #'' # This variable stores the choosed color for the variable above
+cartanamesa = mesa.cartainicial() # This variable stores a dictionare containing the current turn card. This is an example of a card -> {'cor': 'especial', 'numero': '+4'} 
+somatoriadecompra = 0 # If there is an ongoing "buy-type" card (+4 or +2), then this variable will store the purchase sum that the unlucky one will have to buy
+somatoriacarta = '0' # This variable will store the "buy-type" card (+4 or +2). This '0' data is just a placeholder :)
+corescolhida = False # If some player choosed a color with a "change-color-type" card ('Change color' or +4) then the variable will set "True" until someone buy a card
+corescolhida_cor = '' # This variable stores the choosed color for the variable above
 
 # Intro <- This section will only prints the introduction. Nothing else
 print('---UNO---')
