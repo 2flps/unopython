@@ -152,7 +152,7 @@ Escolha sua opção: """.format(cores['amarelo'], cores['limpa'], cores['amarelo
             return '{} | Especial'.format(cartamesa['numero'])
 
 
-    def cartasjogavel(self, cartamesa, jogadorDaVez, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
+    def cartasjogavel(self, cartamesa, jogadorDaVez, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor, debug):
         '''
         -> Irá gerar um valor booleano dizendo se há ou não cartas jogáveis no baralho do player
         :param cartamesa: váriavel contendo a carta na mesa
@@ -163,30 +163,70 @@ Escolha sua opção: """.format(cores['amarelo'], cores['limpa'], cores['amarelo
         :param corescolhidaCor: váriavel dizendo a cor específicada
         :return: irá retornar um valor booleano dizendo se há ou não cartas jogáveis
         '''
+        qntcartas = len(self.listaJogadores[jogadorDaVez])
+        jogavel = False
         if corescolhida == True:
-            cartasjogaveis = False
-            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
-                if self.listaJogadores[jogadorDaVez][c]['cor'] == corescolhidaCor or self.listaJogadores[jogadorDaVez][c]['numero'] == 'Mudar Cor' or self.listaJogadores[jogadorDaVez][c]['numero'] == '+4':
-                    cartasjogaveis = True
+            for c in range(0, qntcartas):
+                if somatoriadecompra > 0:
+                    if self.listaJogadores[jogadorDaVez][c]['numero'] == somatoriacarta:
+                        jogavel = True
+                        if debug == True:
+                            print('DEBUG Cartas Jogável.\n Somatória de compra > 0;\n Cor escolhida == True;\n Índice da carta == {};\n Jogável == {};\n Condição: Se cor escolhida == True e Somatória de compra for > 0 e carta do índice == Somatória carta;\n Somatória carta == {}'.format(c, jogavel, somatoriacarta))
+                        else:
+                            pass
+                    else:
+                        jogavel = False
+                        if debug == True:
+                            print('DEBUG Cartas Jogável.\n Somatória de compra > 0;\n Cor escolhida == True;\n Índice da carta == {};\n Jogável == {};\n Condição: Se cor escolhida == True e Somatória de compra for > 0 e carta do índice != Somatória carta;\n Somatória carta == {}'.format(c, jogavel, somatoriacarta))
+                        else:
+                            pass
                 else:
-                    pass
-            return cartasjogaveis
+                    if self.listaJogadores[jogadorDaVez][c]['cor'] == corescolhidaCor:
+                        jogavel = True
+                        if debug == True:
+                            print('DEBUG Cartas Jogável.\n Somatória de compra !> 0;\n Cor escolhida == True;\n Índice da carta == {};\n Jogável == {};\n Condição: Se cor escolhida == True e Somatória de compra for >! 0 e cor da carta do índice == Cor escolhida cor ({});\n Somatória carta == {}'.format(c, jogavel, corescolhidaCor, somatoriacarta))
+                        else:
+                            pass
+                    else:
+                        jogavel = False
+                        if debug == True:
+                            print('DEBUG Cartas Jogável.\n Somatória de compra !> 0;\n Cor escolhida == True;\n Índice da carta == {};\n Jogável == {};\n Condição: Se cor escolhida == True e Somatória de compra for >! 0 e cor da carta do índice != Cor escolhida cor ({});\n Somatória carta == {}'.format(c, jogavel, corescolhidaCor, somatoriacarta))
+                        else:
+                            pass
         else:
-            cartasjogaveis2 = False
-            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
-                if self.listaJogadores[jogadorDaVez][c]['cor'] == cartamesa['cor'] or self.listaJogadores[jogadorDaVez][c]['numero'] == cartamesa['numero'] or self.listaJogadores[jogadorDaVez][c]['cor'] == 'preto':
-                    cartasjogaveis2 = True
+            for c in range(0, qntcartas):
+                if somatoriadecompra > 0:
+                    if self.listaJogadores[jogadorDaVez][c]['numero'] == somatoriacarta:
+                        jogavel = True
+                        if debug == True:
+                            print('DEBUG Cartas Jogável.\n Somatória de compra > 0;\n Cor escolhida == False;\n Índice da carta == {};\n Jogável == {};\n Condição: Se cor escolhida == False e Somatória de compra for > 0 e n. do índice da carta == Somatória carta;\n Somatória carta == {}'.format(c, jogavel, somatoriacarta))
+                        else:
+                            pass
+                    else:
+                        jogavel = False
+                        if debug == True:
+                            print('DEBUG Cartas Jogável.\n Somatória de compra > 0;\n Cor escolhida == False;\n Índice da carta == {};\n Jogável == {};\n Condição: Se cor escolhida == False e Somatória de compra for > 0 e n. do índice da carta != Somatória carta;\n Somatória carta == {}'.format(c, jogavel, somatoriacarta))
+                        else:
+                            pass
                 else:
-                    pass
-            return cartasjogaveis2
-        if somatoriadecompra > 0:
-            cartasjogaveis3 = False
-            for c in range(0, len(self.listaJogadores[jogadorDaVez])):
-                if self.listaJogadores[jogadorDaVez][c]['numero'] == somatoriacarta:
-                    cartasjogaveis3 = True
-                else:
-                    pass
-            return cartasjogaveis3
+                    if self.listaJogadores[jogadorDaVez][c]['numero'] == cartamesa['numero'] or self.listaJogadores[jogadorDaVez][c]['cor'] == cartamesa['cor']:
+                        jogavel = True
+                        if debug == True:
+                            print('DEBUG Cartas Jogável.\n Somatória de compra !> 0;\n Cor escolhida == False;\n Índice da carta == {};\n Jogável == {};\n Condição: Se cor escolhida == False e Somatória de compra for !> 0 e n. do índice da carta == N. da carta da mesa ou cor do índice da carta == cor da carta da mesa;\n Somatória carta == {}'.format(c, jogavel, somatoriacarta))
+                        else:
+                            pass
+                    else:
+                        jogavel = False
+                        if debug == True:
+                            print('DEBUG Cartas Jogável.\n Somatória de compra !> 0;\n Cor escolhida == False;\n Índice da carta == {};\n Jogável == {};\n Condição: Se cor escolhida == False e Somatória de compra for !> 0 e n. do índice da carta != N. da carta da mesa ou cor do índice da carta != cor da carta da mesa;\n Somatória carta == {}'.format(c, jogavel, somatoriacarta))
+                        else:
+                            pass
+        if debug == True:
+            print()
+            print()
+        else:
+            pass
+        return jogavel
 
 
     def cartajogavel(self, cartamesa, cartajogada, somatoriadecompra, somatoriacarta, jogadordavez, corescolhida, corescolhidaCor):
@@ -206,11 +246,11 @@ Escolha sua opção: """.format(cores['amarelo'], cores['limpa'], cores['amarelo
                 return False
             else:
                 return True
-        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == 'Mudar Cor' and somatoriadecompra == 0:
+        if self.listaJogadores[jogadordavez][cartajogada]['numero'] == 'Mudar Cor' and somatoriadecompra == 0:
             return True
         elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == 'Mudar Cor' and somatoriadecompra > 0:
             return False
-        elif self.listaJogadores[jogadordavez][cartajogada]['numero'] == cartamesa['numero'] or self.listaJogadores[jogadordavez][cartajogada]['cor'] == cartamesa['cor']:
+        if self.listaJogadores[jogadordavez][cartajogada]['numero'] == cartamesa['numero'] or self.listaJogadores[jogadordavez][cartajogada]['cor'] == cartamesa['cor']:
             if somatoriadecompra > 0:
                 if self.listaJogadores[jogadordavez][cartajogada]['numero'] == cartamesa['numero']:
                     return True
@@ -227,7 +267,7 @@ Escolha sua opção: """.format(cores['amarelo'], cores['limpa'], cores['amarelo
         elif self.listaJogadores[jogadordavez][cartajogada]['numero'] != cartamesa['numero'] or self.listaJogadores[jogadordavez][cartajogada]['cor'] != cartamesa['cor']:
             return False
         else:
-            return 'ERRO: Condição não presente no código.'
+            raise IndentationError('ERRO: Condição não presente no código.')
 
 
     def jogarcartamenu(self, jogadordavez, cores):

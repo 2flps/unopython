@@ -51,12 +51,12 @@ def cartasiniciais():
 
 def ai():
     try:
-        linha = lerlinha(linha=3, inicioLinhaIndex=16)
+        linha = lerlinha(linha=3, inicioLinhaIndex=15)
         if 'True' in linha:
             return True
         elif 'False' in linha:
             return False
         else:
-            raise ValueError("O valor não é booleano. O valor está correto? Por favor, gere o arquivo novamente")
+            return TypeError("O valor booleano está sendo analisado de forma errada. O valor está digitado corretamente?")
     except:
         raise FileNotFoundError("Arquivo não encontrado/Arquivo com defeito. Você têm certeza que está rodando o programa corretamente?")
