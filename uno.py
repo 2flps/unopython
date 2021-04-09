@@ -409,6 +409,29 @@ class Cartas:
             return 'verde'
 
 
+class Debug:
+    def __init__(self, listaJogadores, cores):
+        self.listaJogadores = listaJogadores
+        self.cores = cores
+
+
+    def ai_printarcartas(self, jogadordavez, cartamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor, debug=False):
+        classemesa = Mesa(self.listaJogadores)
+        if debug == True:
+            print(f'==========\nJogador da vez: {jogadordavez}\nCartas jogáveis: {classemesa.cartasjogavel(cartamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor, False)}\nCartas do Jogador:')
+            for carta in self.listaJogadores[jogadordavez]:
+                if carta['cor'] == 'vermelho':
+                    print('{}{} | Vermelho{}'.format(cores['vermelho'], carta['numero'], cores['limpa']))
+                elif carta['cor'] == 'amarelo':
+                    print('{}{} | Amarelo{}'.format(cores['amarelo'], carta['numero'], cores['limpa']))
+                elif carta['cor'] == 'verde':
+                    print('{}{} | Verde{}'.format(cores['verde'], carta['numero'], cores['limpa']))
+                elif carta['cor'] == 'azul':
+                    print('{}{} | Azul{}'.format(cores['azul'], carta['numero'], cores['limpa']))
+                else:
+                    print('{} | Especial'.format(carta['numero']))
+
+
 def maisquatro():
     '''
     -> irá gerar uma carta "+4"

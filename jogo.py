@@ -27,6 +27,7 @@ corescolhida = False # If some player choosed a color with a "change-color-type"
 corescolhida_cor = '' # This variable stores the choosed color for the variable above
 vencedor = False # If there's a winner, this variable will set True
 vencedorn = 0 # This variable stores the index of the winner
+class_debug = Debug(baralho, cores) # Calls the class 'debug'
 
 # Intro <- This section will only prints the introduction. Nothing else
 print('---UNO---')
@@ -66,7 +67,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
         print()
         acao = mesa.acao(cores) # This function will print the user menu.
         if acao == 1: # If the user action is 1, then will execute this block
-            while mesa.cartasjogavel(cartanamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, True) == False: # If there's no available card to play, then it will starts a loop
+            while mesa.cartasjogavel(cartanamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, False) == False: # If there's no available card to play, then it will starts a loop
                 escolhaloop = mesa.cartasinvalidas_loop(cores)
                 if escolhaloop == 2:
                     if somatoriadecompra == 0: # If the purchase sum is 0, then it will purchase just one card
@@ -176,8 +177,20 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
         if aihabilitada == False: # If the AI is turned off, then it simply skips the AI turn
             print('AI Desabilitada. Vez do Bot #{}. Pulando vez'.format(jogadordavez))
             jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
+            if mesa.cartasjogavel(cartanamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, False) == True:
+                pass
+            else:
+                if somatoriadecompra == 0: # If the purchase sum is 0, then it will purchase just one card
+                    comprarcarta(baralho, jogadordavez, 1)
+                    debug_printar(f'Bot #{jogadordavez} comprou 1 carta.', debug)
+                if somatoriadecompra > 0: # If the purchase sum is more than 0, then it will purchase the whole purchase sum
+                    comprarcarta(baralho, jogadordavez, somatoriadecompra)
+                    debug_printar(f'Bot #{jogadordavez} comprou {somatoriadecompra} cartas.', debug)
+                    somatoriadecompra = 0   
         else:
-            pass
+            class_debug.ai_printarcartas(jogadordavez, cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, True)
+            sleep(1.5)
+            jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
 
 
 if vencedor == True: # If there's a winner, the game will show this message, otherwise will show nothing
