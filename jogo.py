@@ -12,7 +12,7 @@ jogadoresiniciaisqnt = file_configs.qntjogadores() # Will set the amount of play
 cartasiniciaisqnt = file_configs.cartasiniciais() # Will set the amount of cards each player will receive in the beginning
 aihabilitada = file_configs.ai() # If the AI is off, it will simply skip it's turn
 uno_intervalo = file_configs.uno_intervalo() # This will set the interval the player will have to type "Uno" in the prompt
-debug_condicoes = file_configs.debug_condicoes()
+debug_condicoes = file_configs.debug_condicoes() # If it is set true, then for each "card playing condition" the AI face, a message will be printed
 
 baralho = gerarbaralhos(jogadoresiniciaisqnt, cartasiniciaisqnt) # This variable will store the deck of all players inside a dictionare
 mesa = Mesa(baralho) # Calls the class 'mesa'
@@ -47,15 +47,16 @@ else:
 acao = 1
 
 while acao > 0 and acao < 4: # As long as the player choice stood more than 0 and less than 4, the game/console will not shutdown itself
-    for c in range(0, 4):
-        print(baralho[c])
-    if chegar_ganhador(baralho, quantidadejogadores) == True:
+    if debug == True: # If debug is set True, then it will print each player deck each turn
+        for c in range(0, 4):
+            print(baralho[c])
+    if checar_ganhador(baralho, quantidadejogadores) == True: # This will check if there is a winner in the current game
         vencedor = True
         vencedorn = ganhador(baralho, quantidadejogadores)
-    if vencedor == True:
+    if vencedor == True: # If there is a winner, then this loop will break and a winner message will be displayed
         break
-    else:
-        if jogadores[jogadordavez][f'{jogadordavez}'] == True: # This section convers the player part
+    else: # If there is no winner, then the game will simply run
+        if jogadores[jogadordavez][f'{jogadordavez}'] == True: # This section covers the player controlled part
             escolhaloop = 0 # This variable stores an integer. It's usage is explained below
             lock_jogar = False # If there is none available card to be played, this variable will be set True
             printarcartasmesa = mesa.printarcartamesa(cartanamesa) # Calls the 'printarcartamesa' function, which prints the current player cards in a colorful way (it's not good for me, due to my colorblindness)
@@ -184,14 +185,14 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                 else:
                     print('Cor escolhida: {}'.format(mesa.printarnomedacor(corescolhida_cor, cores)))
                 print()
-        if jogadores[jogadordavez][f'{jogadordavez}'] == False: # AI
+        if jogadores[jogadordavez][f'{jogadordavez}'] == False: # This section coverts the AI controlled part
             if aihabilitada == False: # If the AI is turned off, then it simply skips the AI turn
                 print('AI Desabilitada. Vez do Bot #{}. Pulando vez'.format(jogadordavez))
                 jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)            
-            else:
+            else: # This section covers the "AI card playing decision" part
                 file_configs.printar_condicoes('Condição 1. Somatória de Compra == 0 ({}) e Única carta jogável == +4 {}'.format(somatoriadecompra, class_ai.unica_carta_jogavel(baralho, jogadordavez, '+4', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor)), debug_condicoes)
                 class_debug.ai_printarcartas(jogadordavez, cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, True)
-                if mesa.cartasjogavel(cartanamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, False) == True:
+                if mesa.cartasjogavel(cartanamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, False) == True: # First condition. If the purchase amount is equal to 0 and the only playable card is +4, then the AI will simply buy one card
                     if somatoriadecompra == 0 and class_ai.unica_carta_jogavel(baralho, jogadordavez, '+4', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                         if debug_aijogacartas == True:
                             comprarcarta(baralho, jogadordavez, 1)
@@ -200,7 +201,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                         jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
                     else:
                         file_configs.printar_condicoes('Condição 2. Somatória de Compra > 0 ({}) e possui carta == carta somatória {}'.format(somatoriadecompra, cartas.possuicartanumero(jogadordavez, somatoriacarta)), debug_condicoes)
-                        if somatoriadecompra > 0 and cartas.possuicartanumero(jogadordavez, somatoriacarta) == True:
+                        if somatoriadecompra > 0 and cartas.possuicartanumero(jogadordavez, somatoriacarta) == True: # Second condition. If the purchase amount is > 0 and AI has an playable card, then it will play
                             debug_printar('Somatória de compra > 0 e Jogador possuí carta == Somatória carta', debug)
                             if debug_aijogacartas == True:
                                 indexcartadasomatoria = class_ai.selecionar_carta_random_index(baralho, jogadordavez, somatoriacarta)
@@ -224,8 +225,8 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                             jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
                         else:
                             file_configs.printar_condicoes('Condição 3. Tamanho do baralho do próximo player < 3 ({}).'.format(class_ai.tamanho_baralho(baralho, mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1), False)), debug_condicoes)
-                            if class_ai.tamanho_baralho(baralho, mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1), False) < 3:                                
-                                if cartas.possuicartanumero(jogadordavez, '+4') == True and class_ai.possuicartajogavel(baralho, jogadordavez, '+4', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
+                            if class_ai.tamanho_baralho(baralho, mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1), False) < 3: # Third condition. If the next player has less than 3 cards on its deck, then it will choose one subcondition.
+                                if cartas.possuicartanumero(jogadordavez, '+4') == True and class_ai.possuicartajogavel(baralho, jogadordavez, '+4', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # First subcondition. If AI has +4 and is playable, then it will play it
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Bot possui carta +4.', debug)
                                     if debug_aijogacartas == True:
                                         indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+4')
@@ -237,7 +238,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                         corescolhida_cor = class_ai.cor_majoritaria(baralho, jogadordavez, False)
                                         print(f'Jogador #{jogadordavez} jogou a carta: {mesa.printarcartamesa(cartanamesa)}')
                                     jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
-                                elif cartas.possuicartanumero(jogadordavez, '+2') == True and class_ai.possuicartajogavel(baralho, jogadordavez, '+2', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
+                                elif cartas.possuicartanumero(jogadordavez, '+2') == True and class_ai.possuicartajogavel(baralho, jogadordavez, '+2', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # Second subcondition. If AI has +2 and is playable, then it will play it
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Bot possui carta +2.', debug)
                                     if debug_aijogacartas == True:
                                         indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+2')
@@ -251,7 +252,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                             pass
                                         print(f'Jogador #{jogadordavez} jogou a carta: {mesa.printarcartamesa(cartanamesa)}')
                                     jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
-                                elif cartas.possuicartanumero(jogadordavez, 'Bloqueio') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
+                                elif cartas.possuicartanumero(jogadordavez, 'Bloqueio') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # Third subcondition. If AI has skip and is playable, then it will play it
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Bot possui carta Bloqueio.', debug)
                                     if debug_aijogacartas == True:
                                         indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Bloqueio')
@@ -263,7 +264,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                             pass
                                         print(f'Jogador #{jogadordavez} jogou a carta: {mesa.printarcartamesa(cartanamesa)}')
                                     jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 2)
-                                elif cartas.possuicartanumero(jogadordavez, 'Inverte') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
+                                elif cartas.possuicartanumero(jogadordavez, 'Inverte') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # Fourth subcondition. If AI has reverse and is playable, then it will play it
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Bot possui carta Inverte.', debug)
                                     if debug_aijogacartas == True:
                                         indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Inverte')
@@ -279,7 +280,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                             pass
                                         print(f'Jogador #{jogadordavez} jogou a carta: {mesa.printarcartamesa(cartanamesa)}')
                                     jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
-                                else:
+                                else: # Fifth condition. If AI has any normal card, then it will play it
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Jogando qualquer carta normal aleatória.', debug)
                                     if debug_aijogacartas == True:
                                         indexcartaselecionada = class_ai.selecionar_carta_normal_random(baralho, jogadordavez, cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
@@ -293,7 +294,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                     jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
                             else:
                                 file_configs.printar_condicoes('Condição 4. Possui Bloqueio ({}) e é jogável ({})'.format(cartas.possuicartanumero(jogadordavez, 'Bloqueio'), class_ai.possuicartajogavel(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor)), debug_condicoes)
-                                if cartas.possuicartanumero(jogadordavez, 'Bloqueio') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
+                                if cartas.possuicartanumero(jogadordavez, 'Bloqueio') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # Fourth condition. If AI has skip and is playable, then it will play it
                                     debug_printar('Jogar Bloqueio.', debug)
                                     if debug_aijogacartas == True:
                                         indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Bloqueio')
@@ -307,7 +308,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                     jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 2)
                                 else:
                                     file_configs.printar_condicoes('Condição 5. Possui Inverte ({}) e é jogável ({})'.format(cartas.possuicartanumero(jogadordavez, 'Inverte'), class_ai.possuicartajogavel(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor)), debug_condicoes)
-                                    if cartas.possuicartanumero(jogadordavez, 'Inverte') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
+                                    if cartas.possuicartanumero(jogadordavez, 'Inverte') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # Fifth condition. If AI has reverse and is playable, then it will play it
                                         debug_printar('Jogar Inverte.', debug)
                                         if debug_aijogacartas == True:
                                             indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Inverte')
@@ -325,7 +326,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                         jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
                                     else:
                                         file_configs.printar_condicoes('Condição 6. Possui cartas normais ({})'.format(class_ai.possui_cartas_normais(baralho, jogadordavez, cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor)), debug_condicoes)
-                                        if class_ai.possui_cartas_normais(baralho, jogadordavez, cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
+                                        if class_ai.possui_cartas_normais(baralho, jogadordavez, cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # Sixth condition. If AI has any normal card and is playable, then it will play it
                                             debug_printar('Jogar Carta Normal.', debug)
                                             if debug_aijogacartas == True:
                                                 indexcartaselecionada = class_ai.selecionar_carta_normal_random(baralho, jogadordavez, cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
@@ -342,7 +343,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                                 jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
                                         else:
                                             file_configs.printar_condicoes('Condição 7. Se possuir Mudar Cor ({}) jogar e escolher cor que mais possui ({}).'.format(cartas.possuicartanumero(jogadordavez, 'Mudar Cor'), class_ai.cor_majoritaria(baralho, jogadordavez, False)), debug_condicoes)
-                                            if cartas.possuicartanumero(jogadordavez, 'Mudar Cor') == True:
+                                            if cartas.possuicartanumero(jogadordavez, 'Mudar Cor') == True: # Seventh condition. If AI has Wild and it is playable, then it will play it
                                                 debug_printar('Jogar Mudar Cor baseado na cor que o bot mais possui.', debug)
                                                 if debug_aijogacartas == True:
                                                     indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Mudar Cor')
@@ -354,7 +355,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                                 jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
                                             else:
                                                 file_configs.printar_condicoes('Condição 8. Possui +2 ({})'.format(class_ai.possuicartajogavel(baralho, jogadordavez, '+2', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor)), debug_condicoes)
-                                                if class_ai.possuicartajogavel(baralho, jogadordavez, '+2', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
+                                                if class_ai.possuicartajogavel(baralho, jogadordavez, '+2', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # Eighth condition. If AI has Draw 2 and it is playable, then it will play it
                                                     debug_printar('Jogar +2', debug)
                                                     if debug_aijogacartas == True:
                                                         indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+2')
