@@ -432,6 +432,135 @@ class Debug:
                     print('{} | Especial'.format(carta['numero']))
 
 
+class AI:
+    def __init__(self, listaJogadores, cores):
+        self.listaJogadores = listaJogadores
+        self.cores = cores
+
+
+    def possuicartas(self, listaJogadores, jogadorescolhido, cartanumero, corespecifica=''):
+        possuicartasdesejadas = False
+        if corespecifica != 'amarelo' and corespecifica != 'vermelho' and corespecifica != 'azul' and corespecifica != 'verde' and corespecifica != 'especial' and corespecifica != '':
+            raise TypeError("Cor específica selecionada é do tipo errado. Por favor, digite um cor específica certa.")
+        else:
+            if corespecifica == '':
+                for carta in listaJogadores[jogadorescolhido]:
+                    if carta['numero'] == cartanumero:
+                        possuicartasdesejadas = True
+                    else:
+                        pass
+            else:
+                for carta in listaJogadores[jogadorescolhido]:
+                    if carta['numero'] == cartanumero and carta['cor'] == corespecifica:
+                        possuicartasdesejadas = True
+                    else:
+                        pass
+        return possuicartasdesejadas
+
+
+    def tamanho_baralho(self, listaJogadores, jogadorescolhido, tamanho_index=False):
+        if tamanho_index == True:
+            return len(listaJogadores[jogadorescolhido]) - 1 # Will return the index length of the chosen player's deck. That's it: the len function minus one
+        else:
+            return len(listaJogadores[jogadorescolhido]) # Will return the length of the chosen player using the 'len()' method
+
+
+    def unica_carta_jogavel(self, listaJogadores, jogadorescolhido, cartaescolhidanumero, cartamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
+        unicacartajogavel = True
+        classe_mesa = Mesa(listaJogadores)        
+        for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
+            if listaJogadores[jogadorescolhido][c]['numero'] != cartaescolhidanumero and classe_mesa.cartajogavel(cartamesa, c, somatoriadecompra, somatoriacarta, jogadorescolhido, corescolhida, corescolhidaCor, False) == True:
+                unicacartajogavel = False
+            else:
+                pass
+        return unicacartajogavel
+    
+
+    def selecionar_carta_random_index(self, listaJogadores, jogadorescolhido, cartanumero, cartamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhidaCor):
+        classe_mesa = Mesa(listaJogadores)
+        primeiroindice = -1
+        for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
+            if primeiroindice != -1:
+                pass
+            else:
+                if listaJogadores[jogadorescolhido][c]['numero'] == cartanumero:
+                    primeiroindice = c
+        if primeiroindice == -1:
+            raise ValueError('A carta desejada para ser selecionada não está no baralho. Você digitou a carta certa?')
+        else:
+            return primeiroindice
+
+
+    def selecionar_carta_normal_random(self, listaJogadores, jogadorescolhido, cartamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhidaCor, ignorar_bloqueio_e_inverte):
+        classe_mesa = Mesa(listaJogadores)
+        primeiroindice = -1
+        for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
+            if primeiroindice != -1:
+                pass
+            else:
+                if ignorar_bloqueio_e_inverte == True:
+                    if listaJogadores[jogadorescolhido][c]['numero'] != '+4' and listaJogadores[jogadorescolhido][c]['numero'] != '+2' and listaJogadores[jogadorescolhido][c]['numero'] != 'Mudar Cor' and listaJogadores[jogadorescolhido][c]['numero'] != 'Inverte' and listaJogadores[jogadorescolhido][c]['numero'] != 'Bloqueio':
+                        if classe_mesa.cartajogavel(cartamesa, c, somatoriadecompra, somatoriacarta, jogadorescolhido, corescolhida, corescolhidaCor, False) == True:
+                            primeiroindice = c
+                    else:
+                        pass
+                else:
+                    if listaJogadores[jogadorescolhido][c]['numero'] != '+4' and listaJogadores[jogadorescolhido][c]['numero'] != '+2' and listaJogadores[jogadorescolhido][c]['numero'] != 'Mudar Cor':
+                        if classe_mesa.cartajogavel(cartamesa, c, somatoriadecompra, somatoriacarta, jogadorescolhido, corescolhida, corescolhidaCor, False) == True:
+                            primeiroindice = c
+                    else:
+                        pass
+        if primeiroindice == -1:
+            raise ValueError('A carta desejada para ser selecionada não está no baralho. Você digitou a carta certa?')
+        else:
+            return primeiroindice
+
+
+    def possui_cartas_normais(self, listaJogadores, jogadorescolhido, cartamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
+        classe_mesa = Mesa(listaJogadores)
+        possuicartasnormais = False
+        for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
+            if listaJogadores[jogadorescolhido][c]['numero'] != '+4' and listaJogadores[jogadorescolhido][c]['numero'] != '+2' and listaJogadores[jogadorescolhido][c]['numero'] != 'Bloqueio' and listaJogadores[jogadorescolhido][c]['numero'] != 'Inverte' and listaJogadores[jogadorescolhido][c]['numero'] != 'Mudar Cor':
+                if classe_mesa.cartajogavel(cartamesa, c, somatoriadecompra, somatoriacarta, jogadorescolhido, corescolhida, corescolhidaCor, False) == True:
+                    possuicartasnormais = True
+            else:
+                pass
+        return possuicartasnormais
+
+
+    def cor_majoritaria(self, listaJogadores, jogadorescolhido, considerar_cores_especiais=False):
+        cormajoritaria = {'amarelo': 0, 'vermelho': 0, 'azul': 0, 'verde': 0, 'especiais': 0}
+        for carta in listaJogadores[jogadorescolhido]:
+            if carta['cor'] == 'amarelo':
+                cormajoritaria['amarelo'] += 1
+            if carta['cor'] == 'vermelho':
+                cormajoritaria['vermelho'] += 1
+            if carta['cor'] == 'azul':
+                cormajoritaria['azul'] += 1
+            if carta['cor'] == 'verde':
+                cormajoritaria['verde'] += 1
+            if carta['cor'] == 'preto':
+                cormajoritaria['especiais'] += 1
+        if considerar_cores_especiais == False:
+            del cormajoritaria['especiais']
+        else:
+            pass
+        cormajoritariasorted = sorted(cormajoritaria.items(), key = lambda kv: kv[1], reverse=True)
+        valormaisaltocor = cormajoritariasorted[0][0]
+        return valormaisaltocor
+
+
+    def possuicartajogavel(self, listaJogadores, jogadorescolhido, carta, cartamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
+        classe_mesa = Mesa(listaJogadores)
+        cartajogavel = False
+        for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
+            if listaJogadores[jogadorescolhido][c]['numero'] == carta and classe_mesa.cartajogavel(cartamesa, c, somatoriadecompra, somatoriacarta, jogadorescolhido, corescolhida, corescolhidaCor, False) == True:
+                cartajogavel = True
+            else:
+                pass
+        return cartajogavel
+
+
 def maisquatro():
     '''
     -> irá gerar uma carta "+4"
@@ -645,3 +774,23 @@ def pegarcartaindex(listJogadores, jogadorDaVez, indexCarta):
     :return: irá retornar o dicionário da carta
     '''
     return listJogadores[jogadorDaVez][indexCarta]
+
+
+def chegar_ganhador(listJogadores, quantidadedeplayers):
+    jogador_ganhou = False
+    for c in range(0, quantidadedeplayers):
+        if len(listJogadores[c]) == 0:
+            jogador_ganhou = True
+        else:
+            pass
+    return jogador_ganhou
+
+
+def ganhador(listJogadores, quantidadedeplayers):
+    ganhador = 0
+    for c in range(0, quantidadedeplayers):
+        if len(listJogadores[c]) == 0:
+            ganhador = c
+        else:
+            pass
+    return ganhador
