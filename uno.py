@@ -343,6 +343,12 @@ Escolha sua opção: """.format(cores['amarelo'], cores['limpa'], cores['amarelo
 
 
     def unomenu(self, intervalo, cores):
+        '''
+        -> Irá printar um prompt pedindo para o jogador digitar uno dentro do tempo especificado. Caso não consiga, comprar cartas.
+        :param intervalo: (float) intervalo especificado em "config.ini"
+        :param cores: dicionário contendo as cores
+        :return: valor booleano dizendo se o jogador terá que comprar cartas ou não
+        '''
         comprar = True
         t = Timer(intervalo, print, ['\nTempo acabou. Você não digitou "Uno" :( | Aperte {}"Enter"{} para continuar.'.format(cores['azul'], cores['limpa'])])
         t.start()
@@ -416,6 +422,17 @@ class Debug:
 
 
     def ai_printarcartas(self, jogadordavez, cartamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor, debug=False):
+        '''
+        -> Irá printar as cartas dos jogadores. Tambem haverá debug caso esteja especificado.
+        :param jogadordavez: váriavel contendo o jogador da vez
+        :param cartamesa: váriavel contendo a carta na mesa
+        :param somatoriadecompra: váriavel contendo a somatória de compra
+        :param somatoriacarta: váriavel contendo a carta da somatória
+        :param corescolhida: váriavel contendo um boolean dizendo se há uma cor escolhida
+        :param corescolhidaCor: váriavel contendo a cor escolhida
+        :param debug: irá ativar ou desativar o debug
+        :return: sem retorno
+        '''
         classemesa = Mesa(self.listaJogadores)
         if debug == True:
             print(f'==========\nJogador da vez: {jogadordavez}\nCartas jogáveis: {classemesa.cartasjogavel(cartamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor, False)}\nCartas do Jogador:')
@@ -439,6 +456,14 @@ class AI:
 
 
     def possuicartas(self, listaJogadores, jogadorescolhido, cartanumero, corespecifica=''):
+        '''
+        -> Irá informar se o jogador desejado para a análise possui cartas do número/cor desejada
+        :param listaJogadores: váriavel contendo a lista com os baralhos
+        :param jogadorescolhido: jogador escolhido para a análise
+        :param cartanumero: número específico para ser analisado
+        :param corespecifica: cor específica para ser analisada
+        :return: irá retornar um boolean dizendo se o jogador possui cartas
+        '''
         possuicartasdesejadas = False
         if corespecifica != 'amarelo' and corespecifica != 'vermelho' and corespecifica != 'azul' and corespecifica != 'verde' and corespecifica != 'especial' and corespecifica != '':
             raise TypeError("Cor específica selecionada é do tipo errado. Por favor, digite um cor específica certa.")
@@ -459,6 +484,13 @@ class AI:
 
 
     def tamanho_baralho(self, listaJogadores, jogadorescolhido, tamanho_index=False):
+        '''
+        -> irá informar o tamanho do baralho de um player
+        :param listaJogadores: váriavel contendo os baralhos
+        :param jogadorescolhido: jogador escolhido para ser analisado
+        :param tamanho_index: caso true, irá retornar um valor de índice, isto é, usando o método len() - 1
+        :return: irá retornar o tamanho do baralho do player desejado
+        '''
         if tamanho_index == True:
             return len(listaJogadores[jogadorescolhido]) - 1 # Will return the index length of the chosen player's deck. That's it: the len function minus one
         else:
@@ -466,6 +498,18 @@ class AI:
 
 
     def unica_carta_jogavel(self, listaJogadores, jogadorescolhido, cartaescolhidanumero, cartamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
+        '''
+        -> Irá informar se o player analisado possui apenas uma unica carta jogável do tipo específico
+        :param listaJogadores: váriavel contendo os baralhos dos jogadores
+        :param jogadorescolhido: jogador escolhido para ser analisado
+        :param cartaescolhidanumero: número específico para ser analisado
+        :param cartamesa: carta na mesa
+        :param somatoriadecompra: váriavel contendo a somatória de compra
+        :param somatoriacarta: váriavel contendo a carta da somatória
+        :param corescolhida: váriavel booleana dizendo se há cor escolhida específica
+        :param corescolhidaCor: váriavel contendo a cor escolhida
+        :return: irá retornar um booleano dizendo se há apenas uma carta jogável
+        '''
         unicacartajogavel = True
         classe_mesa = Mesa(listaJogadores)        
         for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
@@ -476,8 +520,14 @@ class AI:
         return unicacartajogavel
     
 
-    def selecionar_carta_random_index(self, listaJogadores, jogadorescolhido, cartanumero, cartamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhidaCor):
-        classe_mesa = Mesa(listaJogadores)
+    def selecionar_carta_random_index(self, listaJogadores, jogadorescolhido, cartanumero):
+        '''
+        -> Irá selecionar carta random baseada no número específico
+        :param listaJogadores: váriavel contendo os baralhos dos jogadores
+        :param jogadorescolhido: jogador escolhido para ser analisado
+        :param cartanumero: carta específica para ser analisada
+        :return: irá retornar o índice da carta específica a ser analisada dentro do baralho
+        '''
         primeiroindice = -1
         for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
             if primeiroindice != -1:
@@ -492,6 +542,18 @@ class AI:
 
 
     def selecionar_carta_normal_random(self, listaJogadores, jogadorescolhido, cartamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhidaCor, ignorar_bloqueio_e_inverte):
+        '''
+        -> Irá selecionar uma carta normal aleatória do baralho do jogador especificado
+        :param listaJogadores: váriavel contendo os baralhos
+        :param jogadorescolhido: jogador especifico a ser analisado
+        :param cartamesa: váriavel contendo a carta na mesa
+        :param somatoriacarta: váriavel contendo o tipo da carta de somatória
+        :param somatoriadecompra: váriavel contendo a compra da somatória
+        :param corescolhida: váriavel booleana dizendo se há uma cor escolhida
+        :param corescolhidaCor: váriavel dizendo a cor escolhida
+        :param ignorar_bloqueio_e_inverte: se selecionado True, irá pular cartas "bloqueio" e "inverte"
+        :return: irá retornar o índice da carta específicada
+        '''
         classe_mesa = Mesa(listaJogadores)
         primeiroindice = -1
         for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
@@ -517,6 +579,17 @@ class AI:
 
 
     def possui_cartas_normais(self, listaJogadores, jogadorescolhido, cartamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
+        '''
+        -> Irá analisar o baralho do jogador especifico para dizer se há cartas normais em seu baralho
+        :param listaJogadores: váriavel contendo os baralhos
+        :param jogadorescolhido: jogador para ser analisado
+        :param cartamesa: váriavel contendo a carta na mesa
+        :param somatoriadecompra: váriavel contendo a somatória de compra
+        :param somatoriacarta: váriavel contendo a carta da somatória
+        :param corescolhida: váriavel booleana dizendo se há uma cor escolhida
+        :param corescolhidaCor: váriavel dizendo a cor escolhida
+        :return: irá retornar um valor booleano dizendo se o jogador possui cartas normais
+        '''
         classe_mesa = Mesa(listaJogadores)
         possuicartasnormais = False
         for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
@@ -529,6 +602,13 @@ class AI:
 
 
     def cor_majoritaria(self, listaJogadores, jogadorescolhido, considerar_cores_especiais=False):
+        '''
+        -> Irá analisar e ver qual é a cor majoritária do baralho do player especificado
+        :param listaJogadores: váriavel contendo os baralhos
+        :param jogadorescolhido: jogador para ser analisado
+        :param considerar_cores_especiais: irá considerar as cores especiais
+        :return: irá retornar um valor string dizendo qual é a cor majoritária
+        '''
         cormajoritaria = {'amarelo': 0, 'vermelho': 0, 'azul': 0, 'verde': 0, 'especiais': 0}
         for carta in listaJogadores[jogadorescolhido]:
             if carta['cor'] == 'amarelo':
@@ -551,6 +631,18 @@ class AI:
 
 
     def possuicartajogavel(self, listaJogadores, jogadorescolhido, carta, cartamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhidaCor):
+        '''
+        -> Irá analisar e dizer se o jogador especificado possui alguma a carta especificada jogável
+        :param listaJogadores: váriavel contendo os baralhos
+        :param jogadorescolhido: jogador para ser analisado
+        :param carta: carta para ser analisada
+        :param cartamesa: váriavel contendo a carta na mesa
+        :param somatoriadecompra: váriavel contendo a somatória de compra
+        :param somatoriacarta: váriavel contendo a carta da somatória
+        :param corescolhida: váriavel booleana dizendo se há uma cor escolhida
+        :param corescolhidaCor: váriavel dizendo a cor escolhida
+        :return: irá retonar um valor booleano dizendo se possui carta especificada jogável
+        '''
         classe_mesa = Mesa(listaJogadores)
         cartajogavel = False
         for c in range(0, self.tamanho_baralho(listaJogadores, jogadorescolhido, False)):
@@ -777,6 +869,12 @@ def pegarcartaindex(listJogadores, jogadorDaVez, indexCarta):
 
 
 def chegar_ganhador(listJogadores, quantidadedeplayers):
+    '''
+    -> Irá analisar o tamanho dos baralhos e informar se houve um ganhador
+    :param listJogadores: lista contendo os baralhos dos jogadores
+    :param quantidadedeplayers: quantidade de jogadores na partida
+    :return: irá retornar um valor booleano dizendo se há um ganhador
+    '''
     jogador_ganhou = False
     for c in range(0, quantidadedeplayers):
         if len(listJogadores[c]) == 0:
@@ -787,6 +885,12 @@ def chegar_ganhador(listJogadores, quantidadedeplayers):
 
 
 def ganhador(listJogadores, quantidadedeplayers):
+    '''
+    -> Irá analisar o tamanho dos baralhos e informar se quem foi o ganhador
+    :param listJogadores: lista contendo os baralhos dos jogadores
+    :param quantidadedeplayers: quantidade de jogadores na partida
+    :return: irá retornar um valor integer dizendo qual player foi o ganhador
+    '''
     ganhador = 0
     for c in range(0, quantidadedeplayers):
         if len(listJogadores[c]) == 0:

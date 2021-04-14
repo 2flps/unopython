@@ -1,6 +1,13 @@
 from time import sleep
 
 def lerlinha(linha, arquivoNome='config.ini', inicioLinhaIndex=0):
+    '''
+    -> Irá ler uma linha desejada
+    :param linha: (int) linha na qual o usuário deseja ler
+    :param arquivoNome: (str) nome do arquivo na qual o usuário deseja ler
+    :param inicioLinhaIndex: (int) índice na qual o usuário deseja que a leitura comece
+    :return: irá retornar uma string com a linha lida pela função
+    '''
     arquivo = open(arquivoNome, 'r')
     comentarios = 15
     count = 0
@@ -15,6 +22,10 @@ def lerlinha(linha, arquivoNome='config.ini', inicioLinhaIndex=0):
 
 
 def escrever():
+    '''
+    -> Irá gerar um arquivo .ini de configurações na pasta raíz do jogo. Caso o arquivo já exista, nada acontecerá
+    :return: sem retorno
+    '''
     try:
         arquivo = open('config.ini', 'x')
         arquivo.write("""#--Game configuration--
@@ -44,6 +55,10 @@ debug_condicoes = False""")
 
 
 def debug():
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro de "debug"
+    :return: retornará um booleano dizendo se o parâmetro é True ou False
+    '''
     try:
         linha = lerlinha(linha=0, inicioLinhaIndex=8)
         if 'True' in linha:
@@ -57,6 +72,10 @@ def debug():
 
 
 def debug_aijogacartas():
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro de "debug_aijogacartas"
+    :return: retornará um booleano dizendo se o parâmetro é True ou False
+    '''
     try:
         linha = lerlinha(linha=1, inicioLinhaIndex=21)
         if 'True' in linha:
@@ -70,6 +89,10 @@ def debug_aijogacartas():
 
 
 def qntjogadores():
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro "qntjogadores"
+    :return: retornará o valor do parâmetro
+    '''
     try:
         linha = lerlinha(linha=2, inicioLinhaIndex=15)
         return int(linha)
@@ -78,6 +101,10 @@ def qntjogadores():
 
 
 def cartasiniciais():
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro "cartasiniciais"
+    :return: retornará o valor do parâmetro
+    '''
     try:
         linha = lerlinha(linha=3, inicioLinhaIndex=17)
         return int(linha)
@@ -86,6 +113,10 @@ def cartasiniciais():
 
 
 def ai():
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro "ai"
+    :return: retornará o valor do parâmetro
+    '''
     try:
         linha = lerlinha(linha=4, inicioLinhaIndex=15)
         if 'True' in linha:
@@ -99,6 +130,10 @@ def ai():
 
 
 def uno_intervalo():
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro "uno_intervalo"
+    :return: retornará o valor do parâmetro
+    '''
     try:
         linha = lerlinha(linha=5, inicioLinhaIndex=16)
         return float(linha)
@@ -107,6 +142,10 @@ def uno_intervalo():
 
 
 def debug_printar(msg, debug_mode):
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro "debug_printar"
+    :return: retornará o valor do parâmetro
+    '''
     if debug_mode == True:
         print(msg)
     else:
@@ -114,6 +153,10 @@ def debug_printar(msg, debug_mode):
 
 
 def debug_condicoes():
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro "debug_condicoes"
+    :return: retornará o valor do parâmetro
+    '''
     try:
         linha = lerlinha(linha=6, inicioLinhaIndex=15)
         if 'True' in linha:
@@ -127,6 +170,10 @@ def debug_condicoes():
 
 
 def printar_condicoes(msg, debug_condicoes, delay=True, delay_tempo=1.0):
+    '''
+    -> Irá ler o arquivo de configurações e analisar o parâmetro "printar_condicoes"
+    :return: retornará o valor do parâmetro
+    '''
     if debug_condicoes == True:
         if delay == True:
             print(msg)
