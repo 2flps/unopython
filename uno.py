@@ -868,7 +868,7 @@ def pegarcartaindex(listJogadores, jogadorDaVez, indexCarta):
     return listJogadores[jogadorDaVez][indexCarta]
 
 
-def chegar_ganhador(listJogadores, quantidadedeplayers):
+def checar_ganhador(listJogadores, quantidadedeplayers):
     '''
     -> Irá analisar o tamanho dos baralhos e informar se houve um ganhador
     :param listJogadores: lista contendo os baralhos dos jogadores
