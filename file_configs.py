@@ -40,7 +40,7 @@ def escrever():
 #aihabilitada (boolean) -> If it is set off, the AI will be turned off and the game will simply skip AI turns | Default = True
 #uno_intervalo (float) -> If you play a card and left your deck with only one card, you will need to type "Uno" in a 'x' time. 'x' is determined by the value of this parameter. Needs to be more than 0 | Default = 1
 #debug_aijogacartas (boolean) -> If it is False, the AI will simply skip their turn. However, if debug is set true, then it will print a message saying which choice was made by the AI | Default = True
-#debug_condicoes (boolean) -> If it is set true, for each "card playing condition" the AI will face, a message will be printed saying if the condition 
+#debug_condicoes (boolean) -> If it is set true, for each "card playing condition" the AI face, a message will be printed saying if the condition 
 
 
 debug = False
