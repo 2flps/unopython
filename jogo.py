@@ -203,7 +203,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                         if somatoriadecompra > 0 and cartas.possuicartanumero(jogadordavez, somatoriacarta) == True:
                             debug_printar('Somatória de compra > 0 e Jogador possuí carta == Somatória carta', debug)
                             if debug_aijogacartas == True:
-                                indexcartadasomatoria = class_ai.selecionar_carta_random_index(baralho, jogadordavez, somatoriacarta, cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                indexcartadasomatoria = class_ai.selecionar_carta_random_index(baralho, jogadordavez, somatoriacarta)
                                 if baralho[jogadordavez][indexcartadasomatoria]['numero'] == '+4':
                                     somatoriadecompra += 4
                                     somatoriacarta = '+4'
@@ -228,7 +228,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                 if cartas.possuicartanumero(jogadordavez, '+4') == True and class_ai.possuicartajogavel(baralho, jogadordavez, '+4', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Bot possui carta +4.', debug)
                                     if debug_aijogacartas == True:
-                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+4', cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+4')
                                         cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                         removercarta(baralho, jogadordavez, indexcartaselecionada)
                                         somatoriadecompra += 4
@@ -240,7 +240,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                 elif cartas.possuicartanumero(jogadordavez, '+2') == True and class_ai.possuicartajogavel(baralho, jogadordavez, '+2', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Bot possui carta +2.', debug)
                                     if debug_aijogacartas == True:
-                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+2', cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+2')
                                         cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                         removercarta(baralho, jogadordavez, indexcartaselecionada)
                                         somatoriadecompra += 2
@@ -254,7 +254,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                 elif cartas.possuicartanumero(jogadordavez, 'Bloqueio') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Bot possui carta Bloqueio.', debug)
                                     if debug_aijogacartas == True:
-                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Bloqueio')
                                         cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                         removercarta(baralho, jogadordavez, indexcartaselecionada)
                                         if corescolhida == True:
@@ -266,7 +266,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                 elif cartas.possuicartanumero(jogadordavez, 'Inverte') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                                     debug_printar('Tamanho do baralho do próximo player < 3 cartas. Bot possui carta Inverte.', debug)
                                     if debug_aijogacartas == True:
-                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Inverte')
                                         cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                         removercarta(baralho, jogadordavez, indexcartaselecionada)
                                         if invertido == False:
@@ -296,7 +296,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                 if cartas.possuicartanumero(jogadordavez, 'Bloqueio') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                                     debug_printar('Jogar Bloqueio.', debug)
                                     if debug_aijogacartas == True:
-                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Bloqueio', cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Bloqueio')
                                         cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                         removercarta(baralho, jogadordavez, indexcartaselecionada)
                                         if corescolhida == True:
@@ -310,7 +310,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                     if cartas.possuicartanumero(jogadordavez, 'Inverte') == True and class_ai.possuicartajogavel(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                                         debug_printar('Jogar Inverte.', debug)
                                         if debug_aijogacartas == True:
-                                            indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Inverte', cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                            indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Inverte')
                                             cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                             removercarta(baralho, jogadordavez, indexcartaselecionada)
                                             if invertido == True:
@@ -345,7 +345,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                             if cartas.possuicartanumero(jogadordavez, 'Mudar Cor') == True:
                                                 debug_printar('Jogar Mudar Cor baseado na cor que o bot mais possui.', debug)
                                                 if debug_aijogacartas == True:
-                                                    indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Mudar Cor', cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                                    indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, 'Mudar Cor')
                                                     cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                                     removercarta(baralho, jogadordavez, indexcartaselecionada)
                                                     corescolhida = True
@@ -357,7 +357,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                                 if class_ai.possuicartajogavel(baralho, jogadordavez, '+2', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                                                     debug_printar('Jogar +2', debug)
                                                     if debug_aijogacartas == True:
-                                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+2', cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                                        indexcartaselecionada = class_ai.selecionar_carta_random_index(baralho, jogadordavez, '+2')
                                                         cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                                         removercarta(baralho, jogadordavez, indexcartaselecionada)
                                                         if corescolhida == True:
