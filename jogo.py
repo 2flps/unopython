@@ -38,9 +38,9 @@ print(f'Há {quantidadejogadores} jogadores na mesa.')
 print('')
 print('Sorteando as cartas...')
 if jogadores[primeirojogador]['{}'.format(primeirojogador)] == True:
-    print('O primeiro jogador é você!')
+    print('O primeiro jogador é você!\n')
 else:
-    print(f'O primeiro jogador é o Jogador {primeirojogador}!')
+    print(f'O primeiro jogador é o Jogador {primeirojogador}!\n')
 
 
 # This variable below stores the choice the player will take during the game
@@ -60,7 +60,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
             escolhaloop = 0 # This variable stores an integer. It's usage is explained below
             lock_jogar = False # If there is none available card to be played, this variable will be set True
             printarcartasmesa = mesa.printarcartamesa(cartanamesa) # Calls the 'printarcartamesa' function, which prints the current player cards in a colorful way (it's not good for me, due to my colorblindness)
-            print('É a sua vez de jogar. Estas são as suas cartas:')
+            print('===============================================\nÉ a sua vez de jogar. Estas são as suas cartas:')
             vercartas(baralho) # Calls the 'vercartas' function, which prints the amount of cards of each player
             qntcartasjogadores(baralho, jogadordavez) # It seeems that this function has the pretty same workability that the 'printarcartamesa' has. Idk why :|
             print() # This just simply prints a blank message, because I'm too lazy to use \n
@@ -79,7 +79,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
             print()
             acao = mesa.acao(cores) # This function will print the user menu.
             if acao == 1: # If the user action is 1, then will execute this block
-                while mesa.cartasjogavel(cartanamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, False) == False: # If there's no available card to play, then it will starts a loop
+                while mesa.cartasjogavel(cartanamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, debug) == False: # If there's no available card to play, then it will starts a loop
                     escolhaloop = mesa.cartasinvalidas_loop(cores)
                     if escolhaloop == 2:
                         if somatoriadecompra == 0: # If the purchase sum is 0, then it will purchase just one card
@@ -120,7 +120,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                     pass
                 if lock_jogar == False: # If there's an available card to be played then this block will be executed, otherwise it will just ignore
                     cartajogar = mesa.jogarcartamenu(jogadordavez, cores, lock_jogar) # This functions call the "Play card" menu, where the user will choose a card based on it's index to play
-                    while mesa.cartajogavel(cartanamesa, cartajogar, somatoriadecompra, somatoriacarta, jogadordavez, corescolhida, corescolhida_cor, True) == False: # If the chosen card is not playable, then it will starts this loop
+                    while mesa.cartajogavel(cartanamesa, cartajogar, somatoriadecompra, somatoriacarta, jogadordavez, corescolhida, corescolhida_cor, debug) == False: # If the chosen card is not playable, then it will starts this loop
                         print('Esta carta é inválida')
                         cartajogar = mesa.jogarcartamenu(jogadordavez, cores, lock_jogar)
                     if corescolhida == True: # If there's a chosen color and a player plays a card, then the "chosen color" variable will set False
@@ -191,7 +191,6 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                 jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)            
             else: # This section covers the "AI card playing decision" part
                 file_configs.printar_condicoes('Condição 1. Somatória de Compra == 0 ({}) e Única carta jogável == +4 {}'.format(somatoriadecompra, class_ai.unica_carta_jogavel(baralho, jogadordavez, '+4', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor)), debug_condicoes)
-                class_debug.ai_printarcartas(jogadordavez, cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, True)
                 if mesa.cartasjogavel(cartanamesa, jogadordavez, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor, False) == True: # First condition. If the purchase amount is equal to 0 and the only playable card is +4, then the AI will simply buy one card
                     if somatoriadecompra == 0 and class_ai.unica_carta_jogavel(baralho, jogadordavez, '+4', cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True:
                         if debug_aijogacartas == True:
@@ -329,7 +328,7 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                                         if class_ai.possui_cartas_normais(baralho, jogadordavez, cartanamesa, somatoriadecompra, somatoriacarta, corescolhida, corescolhida_cor) == True: # Sixth condition. If AI has any normal card and is playable, then it will play it
                                             debug_printar('Jogar Carta Normal.', debug)
                                             if debug_aijogacartas == True:
-                                                indexcartaselecionada = class_ai.selecionar_carta_normal_random(baralho, jogadordavez, cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor)
+                                                indexcartaselecionada = class_ai.selecionar_carta_normal_random(baralho, jogadordavez, cartanamesa, somatoriacarta, somatoriadecompra, corescolhida, corescolhida_cor, True)
                                                 cartanamesa = pegarcartaindex(baralho, jogadordavez, indexcartaselecionada)
                                                 removercarta(baralho, jogadordavez, indexcartaselecionada)
                                                 if corescolhida == True:
@@ -374,15 +373,15 @@ while acao > 0 and acao < 4: # As long as the player choice stood more than 0 an
                 else:
                     if somatoriadecompra == 0: # If the purchase sum is 0, then it will purchase just one card
                         comprarcarta(baralho, jogadordavez, 1)
-                        debug_printar(f'Bot #{jogadordavez} comprou 1 carta.', debug)
+                        print(f'Jogador #{jogadordavez} comprou 1 carta.')
                     if somatoriadecompra > 0: # If the purchase sum is more than 0, then it will purchase the whole purchase sum
                         comprarcarta(baralho, jogadordavez, somatoriadecompra)
-                        debug_printar(f'Bot #{jogadordavez} comprou {somatoriadecompra} cartas.', debug)
+                        print(f'Jogador #{jogadordavez} comprou {somatoriadecompra} cartas.')
                         somatoriadecompra = 0
                     jogadordavez = mesa.proximoplayer(invertido, jogadordavez, quantidadejogadores, 1)
-                sleep(1)
 
 
+print()
 if vencedor == True: # If there's a winner, the game will show this message, otherwise will show nothing
     print(f'O jogador n. {vencedorn} venceu!')
 else:

@@ -182,15 +182,3 @@ def printar_condicoes(msg, debug_condicoes, delay=True, delay_tempo=1.0):
             print(msg)
     else:
         pass
-
-
-'''
-escrever()
-print(debug(), 'debug')
-print(debug_aijogacartas(), 'debug_aijogacartas')
-print(qntjogadores(), 'qntjogadores')
-print(ai(), 'ai')
-print(cartasiniciais(), 'cartasiniciais')
-print(uno_intervalo(), 'uno_intervalo')
-print(debug_condicoes(), 'debug_condicoes')
-'''
