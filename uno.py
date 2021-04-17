@@ -518,7 +518,7 @@ class AI:
             else:
                 pass
         return unicacartajogavel
-    
+
 
     def selecionar_carta_random_index(self, listaJogadores, jogadorescolhido, cartanumero):
         '''
