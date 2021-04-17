@@ -48,7 +48,7 @@ debug_aijogacartas = True
 qntjogadores = 4
 cartasiniciais = 7
 aihabilitada = True
-uno_intervalo = 1
+uno_intervalo = 1.5
 debug_condicoes = False""")
     except:
         pass
