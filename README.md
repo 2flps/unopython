@@ -13,16 +13,16 @@ To play the game you just need to put the three Python files inside a folder and
 ### FAQ
 
 Q: Is this a serious project?
-A: Not at all. I started this project just for fun.
+- A: Not at all. I started this project just for fun.
 
 Q: Are you an experienced Python developer?
-A: No. I just know the basics and nothing more than that.
+- A: No. I just know the basics and nothing more than that.
 
 Q: How longer have you been working on this project?
-A: Almost two months until now, but I usually worked to 1-3 hours per day. To be honest, Red Dead Redemption 2 took a longer portion of my time.
+- A: Almost two months until now, but I usually worked to 1-3 hours per day. To be honest, Red Dead Redemption 2 took a longer portion of my time.
 
 Q: Why did you started to work on this?
-A: I don't know. Seriously, I don't even remember why I started to work on this, but to be honest it was fun and I also learned a lot of things.
+- A: I don't know. Seriously, I don't even remember why I started to work on this, but to be honest it was fun and I also learned a lot of things.
 
 Q: Will there ever be an English version of this game?
-A: Maybe. The only problem is that it would need to be almost entirely rewriten
+- A: Maybe. The only problem is that it would need to be almost entirely rewriten
