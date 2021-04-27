@@ -8,7 +8,7 @@ An Uno game made in Python. In the actual state the game is only in Portuguese, 
 Check out [this article made by Ultra Board Games](https://www.ultraboardgames.com/uno/game-rules.php) where they explain how to play Uno. Just be aware that there's no Blank Card and "scoring system" in this version.
 
 ## Playing the game
-To play the game you just need to put the three Python files inside a folder and execute "jogo.py". A new file called "config.ini" will be generated inside the folder. With this file you will be able to change the game's configuration.
+To play the game you just need to put the three Python files inside a folder and execute "main.py". A new file called "config.ini" will be generated inside the folder. With this file you will be able to change the game's configuration.
 
 ### FAQ
 
