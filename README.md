@@ -1,7 +1,5 @@
 # Uno Python
 
-:warning: **WORK IN PROGRESS!** :warning:
-
 An Uno game made in Python. In the actual state the game is only in Portuguese, although the commentaries are in English. If you know Uno's rules and you don't speak Portuguese, you will probably find no trouble playing the game (just some words you might have to translate).
 
 ## Rules
@@ -26,3 +24,9 @@ Q: Why did you start working on this?
 
 Q: Will there ever be an English version of this game?
 - A: Maybe. The only problem is that it would need to be almost entirely rewriten
+
+---
+LATE 2021 QUESTION:
+
+Q: The code is ugly. Will you fix it?
+- A: Well, I know. I was starting to program when I wrote these scripts. Nowadays I recognize the weirdness of this. But the answer is: no. I'm currently learning Java, so I'm too busy to fix this messy code. Also, I was playing around with Unity trying to make a "Uno" game, so maybe there will be a Unity version of this :)
